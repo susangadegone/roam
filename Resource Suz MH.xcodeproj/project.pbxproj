@@ -1,0 +1,320 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0BBCCEA8D7DFC7DB4B04548F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0390F3F4058EDE121B4C0733 /* LaunchScreen.storyboard */; };
+		18970E0789EB18C4AAED8064 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949323C993DB7A460CFF83FD /* Theme.swift */; };
+		57C655F77E781CBDA7031209 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC5FD7624AD30358433FE1C4 /* Assets.xcassets */; };
+		6396150EAB0DA50D850B5391 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EE011F9B9E60C8328D667B /* SampleData.swift */; };
+		896CA2E9BC11C96C2CD4E24F /* ResourceSuzApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C353F616855773B28034B964 /* ResourceSuzApp.swift */; };
+		9205A441DBA7E1288430EF1F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582ED2A14C424DC9D1158BFC /* HomeView.swift */; };
+		926CE68F59FF6D23C04509D4 /* ResourceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9197A903486A224F16D49067 /* ResourceDetailView.swift */; };
+		9B6BD2CAC14E55378303AF5B /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C4D9E2A82F02C7AB6B10A7 /* Resource.swift */; };
+		A01E1CC02FC8F83B002E243E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CBF2FC8F83B002E243E /* MapView.swift */; };
+		A01E1CC22FC8F847002E243E /* ResourceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CC12FC8F847002E243E /* ResourceStore.swift */; };
+		A01E1CC42FC8F84F002E243E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CC32FC8F84F002E243E /* Config.swift */; };
+		A01E1CC62FC8F862002E243E /* ResourceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CC52FC8F862002E243E /* ResourceService.swift */; };
+		A01E1CCA2FC90882002E243E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CC92FC90882002E243E /* OnboardingView.swift */; };
+		A01E1CCC2FC90A77002E243E /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CCB2FC90A77002E243E /* ProfileView.swift */; };
+		A01E1CCE2FC91191002E243E /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CCD2FC91191002E243E /* RootView.swift */; };
+		A01E1CD02FC912C3002E243E /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A01E1CCF2FC912C3002E243E /* HowToUseView.swift */; };
+		A06C2A5A2FC92364002D7492 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06C2A592FC92364002D7492 /* AuthView.swift */; };
+		A0970C112FC4091B00E759E0 /* SavedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0970C102FC4091B00E759E0 /* SavedStore.swift */; };
+		A0970C132FC4092600E759E0 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0970C122FC4092600E759E0 /* SavedView.swift */; };
+		A486A75E25102B7FD5540699 /* ResourceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7CE5CD1A61B5E1A81FF250 /* ResourceCard.swift */; };
+		E76237F522B0FFCA68DCC3C6 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A126345B48EA8DC4444185 /* RootTabView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2D7CE5CD1A61B5E1A81FF250 /* ResourceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceCard.swift; sourceTree = "<group>"; };
+		33A126345B48EA8DC4444185 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		423BD6B047C612AF35FD2035 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		582ED2A14C424DC9D1158BFC /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5FBEA399BB99894E22E6DA80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9197A903486A224F16D49067 /* ResourceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceDetailView.swift; sourceTree = "<group>"; };
+		949323C993DB7A460CFF83FD /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A01E1CBF2FC8F83B002E243E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		A01E1CC12FC8F847002E243E /* ResourceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceStore.swift; sourceTree = "<group>"; };
+		A01E1CC32FC8F84F002E243E /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		A01E1CC52FC8F862002E243E /* ResourceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceService.swift; sourceTree = "<group>"; };
+		A01E1CC92FC90882002E243E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A01E1CCB2FC90A77002E243E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A01E1CCD2FC91191002E243E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		A01E1CCF2FC912C3002E243E /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
+		A06C2A592FC92364002D7492 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		A0970C102FC4091B00E759E0 /* SavedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedStore.swift; sourceTree = "<group>"; };
+		A0970C122FC4092600E759E0 /* SavedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedView.swift; sourceTree = "<group>"; };
+		AC5FD7624AD30358433FE1C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B46288726A60AAFE3B3AD636 /* Resource Suz MH.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "Resource Suz MH.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C353F616855773B28034B964 /* ResourceSuzApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSuzApp.swift; sourceTree = "<group>"; };
+		F6EE011F9B9E60C8328D667B /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		F8C4D9E2A82F02C7AB6B10A7 /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		12053CD2D7C3DAD954781123 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				582ED2A14C424DC9D1158BFC /* HomeView.swift */,
+				9197A903486A224F16D49067 /* ResourceDetailView.swift */,
+				33A126345B48EA8DC4444185 /* RootTabView.swift */,
+				F7AE11D8D9E2DDB64229DA7E /* Components */,
+				A0970C122FC4092600E759E0 /* SavedView.swift */,
+				A01E1CBF2FC8F83B002E243E /* MapView.swift */,
+				A01E1CC92FC90882002E243E /* OnboardingView.swift */,
+				A01E1CCB2FC90A77002E243E /* ProfileView.swift */,
+				A01E1CCD2FC91191002E243E /* RootView.swift */,
+				A01E1CCF2FC912C3002E243E /* HowToUseView.swift */,
+				A06C2A592FC92364002D7492 /* AuthView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7F399EC3A8604B9B7A9B7E75 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				949323C993DB7A460CFF83FD /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		954E611D9486036D90C65F2D /* Resource Suz MH */ = {
+			isa = PBXGroup;
+			children = (
+				AC5FD7624AD30358433FE1C4 /* Assets.xcassets */,
+				423BD6B047C612AF35FD2035 /* Info.plist */,
+				0390F3F4058EDE121B4C0733 /* LaunchScreen.storyboard */,
+				EBE93B398F1E7BA6E88D0C90 /* App */,
+				96155AB2B1B4F0BBAE00856F /* Models */,
+				7F399EC3A8604B9B7A9B7E75 /* Theme */,
+				12053CD2D7C3DAD954781123 /* Views */,
+			);
+			path = "Resource Suz MH";
+			sourceTree = "<group>";
+		};
+		96155AB2B1B4F0BBAE00856F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F8C4D9E2A82F02C7AB6B10A7 /* Resource.swift */,
+				F6EE011F9B9E60C8328D667B /* SampleData.swift */,
+				A0970C102FC4091B00E759E0 /* SavedStore.swift */,
+				A01E1CC12FC8F847002E243E /* ResourceStore.swift */,
+				A01E1CC32FC8F84F002E243E /* Config.swift */,
+				A01E1CC52FC8F862002E243E /* ResourceService.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BC54DFB2BF5C8B213EDC0FA2 = {
+			isa = PBXGroup;
+			children = (
+				954E611D9486036D90C65F2D /* Resource Suz MH */,
+				E69EC5B5C82EC752C74378C6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E69EC5B5C82EC752C74378C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B46288726A60AAFE3B3AD636 /* Resource Suz MH.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EBE93B398F1E7BA6E88D0C90 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				C353F616855773B28034B964 /* ResourceSuzApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F7AE11D8D9E2DDB64229DA7E /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2D7CE5CD1A61B5E1A81FF250 /* ResourceCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		435F89724C4F83FE6F37E683 /* Resource Suz MH */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E22BA1C3A79E0AEDF85735B6 /* Build configuration list for PBXNativeTarget "Resource Suz MH" */;
+			buildPhases = (
+				F2BD16DB07462BD1F029055E /* Sources */,
+				70E5B6908A17E3519841DB04 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Resource Suz MH";
+			packageProductDependencies = (
+			);
+			productName = "Resource Suz MH";
+			productReference = B46288726A60AAFE3B3AD636 /* Resource Suz MH.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		41CA413D5C4A126C7EFE4867 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 94D2BB0F5953D91E762ACFAD /* Build configuration list for PBXProject "Resource Suz MH" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BC54DFB2BF5C8B213EDC0FA2;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				435F89724C4F83FE6F37E683 /* Resource Suz MH */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		70E5B6908A17E3519841DB04 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57C655F77E781CBDA7031209 /* Assets.xcassets in Resources */,
+				0BBCCEA8D7DFC7DB4B04548F /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F2BD16DB07462BD1F029055E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9205A441DBA7E1288430EF1F /* HomeView.swift in Sources */,
+				A0970C112FC4091B00E759E0 /* SavedStore.swift in Sources */,
+				9B6BD2CAC14E55378303AF5B /* Resource.swift in Sources */,
+				A01E1CD02FC912C3002E243E /* HowToUseView.swift in Sources */,
+				A01E1CC02FC8F83B002E243E /* MapView.swift in Sources */,
+				A486A75E25102B7FD5540699 /* ResourceCard.swift in Sources */,
+				A01E1CC62FC8F862002E243E /* ResourceService.swift in Sources */,
+				926CE68F59FF6D23C04509D4 /* ResourceDetailView.swift in Sources */,
+				A06C2A5A2FC92364002D7492 /* AuthView.swift in Sources */,
+				A01E1CC42FC8F84F002E243E /* Config.swift in Sources */,
+				A01E1CCC2FC90A77002E243E /* ProfileView.swift in Sources */,
+				896CA2E9BC11C96C2CD4E24F /* ResourceSuzApp.swift in Sources */,
+				A0970C132FC4092600E759E0 /* SavedView.swift in Sources */,
+				E76237F522B0FFCA68DCC3C6 /* RootTabView.swift in Sources */,
+				6396150EAB0DA50D850B5391 /* SampleData.swift in Sources */,
+				A01E1CCE2FC91191002E243E /* RootView.swift in Sources */,
+				A01E1CCA2FC90882002E243E /* OnboardingView.swift in Sources */,
+				18970E0789EB18C4AAED8064 /* Theme.swift in Sources */,
+				A01E1CC22FC8F847002E243E /* ResourceStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		0390F3F4058EDE121B4C0733 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5FBEA399BB99894E22E6DA80 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		16A177235FB84A4F81B0A99A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_NAME = "Resource Suz MH";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		605DA189F1F488CD17A9803C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Resource Suz MH/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.superapp.resourcesuzmh;
+			};
+			name = Release;
+		};
+		9BE2A3C68CBCBE13203EC9D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_NAME = "Resource Suz MH";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DB49F9F6D271CF8270786C71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "Resource Suz MH/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.superapp.resourcesuzmh;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		94D2BB0F5953D91E762ACFAD /* Build configuration list for PBXProject "Resource Suz MH" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9BE2A3C68CBCBE13203EC9D8 /* Debug */,
+				16A177235FB84A4F81B0A99A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E22BA1C3A79E0AEDF85735B6 /* Build configuration list for PBXNativeTarget "Resource Suz MH" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB49F9F6D271CF8270786C71 /* Debug */,
+				605DA189F1F488CD17A9803C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 41CA413D5C4A126C7EFE4867 /* Project object */;
+}
