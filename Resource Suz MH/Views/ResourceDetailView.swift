@@ -3,6 +3,10 @@ import SwiftUI
 struct ResourceDetailView: View {
     let resource: Resource
     @Environment(SavedStore.self) private var saved
+    @Environment(GamificationStore.self) private var gamification
+    @State private var showingCompletionFollowUp = false
+    @State private var showingCompletionConfirmation = false
+    @State private var completionAwardedPoints = true
 
     var body: some View {
         ZStack {
@@ -25,6 +29,52 @@ struct ResourceDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(Theme.canvas, for: .navigationBar)
+        .overlay(alignment: .top) {
+            if showingCompletionConfirmation {
+                completionConfirmationToast
+                    .padding(.top, 12)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(duration: 0.3), value: showingCompletionConfirmation)
+        .sheet(isPresented: $showingCompletionFollowUp) {
+            ActivityFollowUpSheet { answer in
+                showingCompletionFollowUp = false
+                completionAwardedPoints = gamification.completeActivity(
+                    resourceID: resource.id,
+                    title: resource.name,
+                    followUp: answer
+                )
+                showingCompletionConfirmation = true
+                Task {
+                    try? await Task.sleep(for: .seconds(2.5))
+                    showingCompletionConfirmation = false
+                }
+            }
+            .presentationDetents([.medium])
+        }
+    }
+
+    private var completionConfirmationToast: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "leaf.fill")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Theme.sage)
+            Text(completionAwardedPoints ? "+10 points · Glad you made time for this" : "Logged — thanks for checking in")
+                .font(.sans(13, weight: .semibold))
+                .foregroundStyle(Theme.cocoa)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Theme.cream)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(Theme.cocoaBorder, lineWidth: 1)
+                )
+        )
+        .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 
     private var header: some View {
@@ -123,6 +173,25 @@ struct ResourceDetailView: View {
 
     private var actionBar: some View {
         VStack(spacing: 8) {
+            if resource.category != .crisisSupport {
+                Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    showingCompletionFollowUp = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "checkmark.circle")
+                            .font(.system(size: 14, weight: .semibold))
+                        Text("Mark as done")
+                            .font(.sans(15, weight: .semibold))
+                    }
+                    .foregroundStyle(Theme.cream)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .background(Capsule().fill(Theme.sage))
+                }
+                .buttonStyle(.plain)
+            }
+
             if resource.hasPhysicalAddress {
                 Button {
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -180,7 +249,71 @@ struct ResourceDetailView: View {
     }
 }
 
+/// Shown after "Mark as done" — a warm, low-stakes check on how the activity felt.
+/// Points are only awarded once the user picks one of these options.
+private struct ActivityFollowUpSheet: View {
+    var onAnswer: (String) -> Void
+
+    private let options = ["A little better", "About the same", "I'm not sure"]
+
+    var body: some View {
+        ZStack {
+            Theme.canvas.ignoresSafeArea()
+            VStack(spacing: 24) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.cream)
+                        .frame(width: 72, height: 72)
+                        .overlay(Circle().strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+                    Image(systemName: "leaf.fill")
+                        .font(.system(size: 28, weight: .light))
+                        .foregroundStyle(Theme.sage)
+                }
+                .padding(.top, 40)
+
+                VStack(spacing: 6) {
+                    Text("Nice work")
+                        .font(.serifTitle(22, weight: .semibold))
+                        .foregroundStyle(Theme.cocoa)
+                    Text("How do you feel compared to before?")
+                        .font(.sans(15))
+                        .foregroundStyle(Theme.cocoaMuted)
+                        .multilineTextAlignment(.center)
+                }
+
+                VStack(spacing: 10) {
+                    ForEach(options, id: \.self) { option in
+                        Button {
+                            UISelectionFeedbackGenerator().selectionChanged()
+                            onAnswer(option)
+                        } label: {
+                            Text(option)
+                                .font(.sans(15, weight: .medium))
+                                .foregroundStyle(Theme.cocoa)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 52)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Theme.cream)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .strokeBorder(Theme.cocoaBorder, lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 28)
+
+                Spacer()
+            }
+        }
+    }
+}
+
 #Preview {
     NavigationStack { ResourceDetailView(resource: SampleData.resources[1]) }
         .environment(SavedStore())
+        .environment(GamificationStore())
 }

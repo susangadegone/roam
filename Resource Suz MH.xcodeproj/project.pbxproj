@@ -28,6 +28,8 @@
 		A0970C132FC4092600E759E0 /* SavedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0970C122FC4092600E759E0 /* SavedView.swift */; };
 		A486A75E25102B7FD5540699 /* ResourceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D7CE5CD1A61B5E1A81FF250 /* ResourceCard.swift */; };
 		E76237F522B0FFCA68DCC3C6 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A126345B48EA8DC4444185 /* RootTabView.swift */; };
+		B0C1D2E3F4A5B6C7D8E9F0A1 /* MoodCheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */; };
+		C1D2E3F4A5B6C7D8E9F0A1B2 /* GamificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +56,8 @@
 		C353F616855773B28034B964 /* ResourceSuzApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSuzApp.swift; sourceTree = "<group>"; };
 		F6EE011F9B9E60C8328D667B /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		F8C4D9E2A82F02C7AB6B10A7 /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+		B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodCheckInView.swift; sourceTree = "<group>"; };
+		C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -71,6 +75,7 @@
 				A01E1CCD2FC91191002E243E /* RootView.swift */,
 				A01E1CCF2FC912C3002E243E /* HowToUseView.swift */,
 				A06C2A592FC92364002D7492 /* AuthView.swift */,
+				B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -106,6 +111,7 @@
 				A01E1CC12FC8F847002E243E /* ResourceStore.swift */,
 				A01E1CC32FC8F84F002E243E /* Config.swift */,
 				A01E1CC52FC8F862002E243E /* ResourceService.swift */,
+				C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -226,6 +232,8 @@
 				A01E1CCA2FC90882002E243E /* OnboardingView.swift in Sources */,
 				18970E0789EB18C4AAED8064 /* Theme.swift in Sources */,
 				A01E1CC22FC8F847002E243E /* ResourceStore.swift in Sources */,
+				B0C1D2E3F4A5B6C7D8E9F0A1 /* MoodCheckInView.swift in Sources */,
+				C1D2E3F4A5B6C7D8E9F0A1B2 /* GamificationStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

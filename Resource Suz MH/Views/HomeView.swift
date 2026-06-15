@@ -2,11 +2,13 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(ResourceStore.self) private var store
+    @Environment(GamificationStore.self) private var gamification
     @AppStorage("pref_area") private var prefArea = ""
     @AppStorage("pref_cost") private var prefCost = ""
     @AppStorage("pref_interests") private var prefInterests = ""
     @AppStorage("pref_access") private var prefAccess = ""
     @AppStorage("pref_distance") private var prefDistance = ""
+    @AppStorage("preferredActivities") private var prefActivities = ""
     @State private var query: String = ""
     @State private var freeOnly: Bool = false
     @State private var selectedCategory: ResourceCategory? = nil
@@ -17,6 +19,35 @@ struct HomeView: View {
 
     private var preferredCategories: Set<ResourceCategory> {
         Set(prefInterests.split(separator: ",").compactMap { ResourceCategory(rawValue: String($0)) })
+    }
+
+    private static let activityCategoryMap: [String: [ResourceCategory]] = [
+        "Walking / being outside": [.natureWellness, .movement],
+        "Creative stuff (art, music, writing)": [.creative],
+        "Social / being around people": [.social, .community, .communityEvent, .events],
+        "Quiet / alone time (reading, journaling)": [.quiet, .libraryProgram, .libraryEvent],
+        "Movement (stretching, yoga, light exercise)": [.movement, .fitness],
+    ]
+
+    private var preferredActivityCategories: Set<ResourceCategory> {
+        let selected = prefActivities.split(separator: ",").map(String.init)
+        return Set(selected.flatMap { Self.activityCategoryMap[$0] ?? [] })
+    }
+
+    private static let checkInCategoryMap: [String: [ResourceCategory]] = [
+        "Something calming": [.meditation, .soundHealing, .quiet],
+        "Getting outside": [.natureWellness, .movement, .fitness],
+        "Connecting with others": [.social, .community, .communityEvent, .events, .peer],
+        "Quiet time alone": [.quiet, .libraryProgram, .meditation],
+        "Just exploring": [],
+    ]
+
+    private var checkInCategories: Set<ResourceCategory> {
+        Set(Self.checkInCategoryMap[gamification.lastCheckInFollowUp] ?? [])
+    }
+
+    private var allPreferredCategories: Set<ResourceCategory> {
+        preferredCategories.union(preferredActivityCategories).union(checkInCategories)
     }
 
     private var maxDistanceMiles: Double? {
@@ -50,10 +81,11 @@ struct HomeView: View {
                 || r.neighborhood.localizedCaseInsensitiveContains(query)
                 || r.category.rawValue.localizedCaseInsensitiveContains(query))
         }
-        guard !preferredCategories.isEmpty || !prefAccess.isEmpty else { return base }
+        let preferred = allPreferredCategories
+        guard !preferred.isEmpty || !prefAccess.isEmpty else { return base }
         return base.sorted { a, b in
-            let aInterest = preferredCategories.contains(a.category) ? 0 : 1
-            let bInterest = preferredCategories.contains(b.category) ? 0 : 1
+            let aInterest = preferred.contains(a.category) ? 0 : 1
+            let bInterest = preferred.contains(b.category) ? 0 : 1
             if aInterest != bInterest { return aInterest < bInterest }
             return accessScore(a) < accessScore(b)
         }
@@ -140,7 +172,7 @@ struct HomeView: View {
             Text("roam")
                 .font(.serifTitle(28, weight: .semibold))
                 .foregroundStyle(Theme.cocoa)
-            Text("Here when you're ready. Find what fits your energy today.")
+            Text("Small steps, every day. Find what fits your energy today.")
                 .font(.sans(13))
                 .foregroundStyle(Theme.cocoaMuted)
                 .lineSpacing(2)
@@ -411,4 +443,4 @@ struct CrisisSheet: View {
     }
 }
 
-#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()) }
+#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()).environment(GamificationStore()) }
