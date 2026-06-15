@@ -30,6 +30,10 @@
 		E76237F522B0FFCA68DCC3C6 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A126345B48EA8DC4444185 /* RootTabView.swift */; };
 		B0C1D2E3F4A5B6C7D8E9F0A1 /* MoodCheckInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */; };
 		C1D2E3F4A5B6C7D8E9F0A1B2 /* GamificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */; };
+		D1D2E3F4A5B6C7D8E9F0A1C1 /* CopingSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C2 /* CopingSkill.swift */; };
+		D1D2E3F4A5B6C7D8E9F0A1C3 /* ActivityFollowUpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C4 /* ActivityFollowUpSheet.swift */; };
+		D1D2E3F4A5B6C7D8E9F0A1C5 /* CopingSkillDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C6 /* CopingSkillDetailView.swift */; };
+		D1D2E3F4A5B6C7D8E9F0A1C7 /* CopingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C8 /* CopingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +62,10 @@
 		F8C4D9E2A82F02C7AB6B10A7 /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodCheckInView.swift; sourceTree = "<group>"; };
 		C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationStore.swift; sourceTree = "<group>"; };
+		D1D2E3F4A5B6C7D8E9F0A1C2 /* CopingSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopingSkill.swift; sourceTree = "<group>"; };
+		D1D2E3F4A5B6C7D8E9F0A1C4 /* ActivityFollowUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFollowUpSheet.swift; sourceTree = "<group>"; };
+		D1D2E3F4A5B6C7D8E9F0A1C6 /* CopingSkillDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopingSkillDetailView.swift; sourceTree = "<group>"; };
+		D1D2E3F4A5B6C7D8E9F0A1C8 /* CopingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -76,6 +84,9 @@
 				A01E1CCF2FC912C3002E243E /* HowToUseView.swift */,
 				A06C2A592FC92364002D7492 /* AuthView.swift */,
 				B0C1D2E3F4A5B6C7D8E9F0A2 /* MoodCheckInView.swift */,
+				D1D2E3F4A5B6C7D8E9F0A1C4 /* ActivityFollowUpSheet.swift */,
+				D1D2E3F4A5B6C7D8E9F0A1C6 /* CopingSkillDetailView.swift */,
+				D1D2E3F4A5B6C7D8E9F0A1C8 /* CopingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -112,6 +123,7 @@
 				A01E1CC32FC8F84F002E243E /* Config.swift */,
 				A01E1CC52FC8F862002E243E /* ResourceService.swift */,
 				C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */,
+				D1D2E3F4A5B6C7D8E9F0A1C2 /* CopingSkill.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -234,6 +246,10 @@
 				A01E1CC22FC8F847002E243E /* ResourceStore.swift in Sources */,
 				B0C1D2E3F4A5B6C7D8E9F0A1 /* MoodCheckInView.swift in Sources */,
 				C1D2E3F4A5B6C7D8E9F0A1B2 /* GamificationStore.swift in Sources */,
+				D1D2E3F4A5B6C7D8E9F0A1C1 /* CopingSkill.swift in Sources */,
+				D1D2E3F4A5B6C7D8E9F0A1C3 /* ActivityFollowUpSheet.swift in Sources */,
+				D1D2E3F4A5B6C7D8E9F0A1C5 /* CopingSkillDetailView.swift in Sources */,
+				D1D2E3F4A5B6C7D8E9F0A1C7 /* CopingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,7 +3,7 @@ import SwiftUI
 struct RootTabView: View {
     @State private var selection: Tab = .home
 
-    enum Tab: Hashable { case home, map, saved, profile }
+    enum Tab: Hashable { case home, coping, map, saved, profile }
 
     init() {
         let appearance = UITabBarAppearance()
@@ -36,6 +36,10 @@ struct RootTabView: View {
             HomeView()
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(Tab.home)
+
+            CopingView()
+                .tabItem { Label("Coping", systemImage: "sparkles") }
+                .tag(Tab.coping)
 
             MapView()
                 .tabItem { Label("Map", systemImage: "map") }
@@ -87,4 +91,5 @@ struct PlaceholderTab: View {
     RootTabView()
         .environment(SavedStore())
         .environment(ResourceStore())
+        .environment(GamificationStore())
 }
