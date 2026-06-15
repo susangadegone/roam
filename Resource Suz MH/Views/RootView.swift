@@ -9,26 +9,37 @@ struct RootView: View {
 
     private static let recheckInterval: Duration = .seconds(30 * 60)
 
+    /// A single, ordered cover flow (auth → onboarding → mood check-in) so the
+    /// app never briefly reveals the home tabs in between steps.
+    private enum Cover: Identifiable {
+        case auth, onboarding, moodCheckIn
+        var id: Self { self }
+    }
+
+    private var activeCover: Cover? {
+        if !hasAccount { return .auth }
+        if !hasSeenOnboarding { return .onboarding }
+        if showMoodCheckIn { return .moodCheckIn }
+        return nil
+    }
+
     var body: some View {
         RootTabView()
-            .fullScreenCover(isPresented: Binding(
-                get: { !hasAccount || !hasSeenOnboarding },
+            .fullScreenCover(item: Binding(
+                get: { activeCover },
                 set: { _ in }
-            )) {
-                if !hasAccount {
+            )) { cover in
+                switch cover {
+                case .auth:
                     AuthView()
-                } else {
+                case .onboarding:
                     OnboardingView(isShowing: Binding(
                         get: { !hasSeenOnboarding },
                         set: { _ in }
                     ))
+                case .moodCheckIn:
+                    MoodCheckInView(isShowing: $showMoodCheckIn)
                 }
-            }
-            .fullScreenCover(isPresented: Binding(
-                get: { showMoodCheckIn && hasAccount && hasSeenOnboarding },
-                set: { showMoodCheckIn = $0 }
-            )) {
-                MoodCheckInView(isShowing: $showMoodCheckIn)
             }
             .overlay(alignment: .bottom) {
                 if showRecheckPrompt {

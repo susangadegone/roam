@@ -51,7 +51,7 @@ struct AuthView: View {
                     Text("roam")
                         .font(.serifTitle(36, weight: .semibold))
                         .foregroundStyle(Theme.cocoa)
-                    Text("Find what you can do today —\nat your pace, on your terms.")
+                    Text("Small steps, every day.\nLet's find what fits you.")
                         .font(.sans(15))
                         .foregroundStyle(Theme.cocoaMuted)
                         .multilineTextAlignment(.center)

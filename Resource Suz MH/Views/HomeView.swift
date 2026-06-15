@@ -9,7 +9,6 @@ struct HomeView: View {
     @AppStorage("pref_interests") private var prefInterests = ""
     @AppStorage("pref_access") private var prefAccess = ""
     @AppStorage("pref_distance") private var prefDistance = ""
-    @AppStorage("preferredActivities") private var prefActivities = ""
     @State private var query: String = ""
     @State private var freeOnly: Bool = false
     @State private var selectedCategory: ResourceCategory? = nil
@@ -20,19 +19,6 @@ struct HomeView: View {
 
     private var preferredCategories: Set<ResourceCategory> {
         Set(prefInterests.split(separator: ",").compactMap { ResourceCategory(rawValue: String($0)) })
-    }
-
-    private static let activityCategoryMap: [String: [ResourceCategory]] = [
-        "Walking / being outside": [.natureWellness, .movement],
-        "Creative stuff (art, music, writing)": [.creative],
-        "Social / being around people": [.social, .community, .communityEvent, .events],
-        "Quiet / alone time (reading, journaling)": [.quiet, .libraryProgram, .libraryEvent],
-        "Movement (stretching, yoga, light exercise)": [.movement, .fitness],
-    ]
-
-    private var preferredActivityCategories: Set<ResourceCategory> {
-        let selected = prefActivities.split(separator: ",").map(String.init)
-        return Set(selected.flatMap { Self.activityCategoryMap[$0] ?? [] })
     }
 
     private static let checkInCategoryMap: [String: [ResourceCategory]] = [
@@ -48,7 +34,7 @@ struct HomeView: View {
     }
 
     private var allPreferredCategories: Set<ResourceCategory> {
-        preferredCategories.union(preferredActivityCategories).union(checkInCategories)
+        preferredCategories.union(checkInCategories)
     }
 
     private var maxDistanceMiles: Double? {

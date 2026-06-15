@@ -10,24 +10,14 @@ struct OnboardingView: View {
     @AppStorage("pref_access") private var prefAccess = ""
     @AppStorage("pref_cost") private var prefCost = ""
     @AppStorage("pref_distance") private var prefDistance = ""
-    @AppStorage("preferredActivities") private var prefActivities = ""
 
     @State private var areaAnswer = ""
     @State private var interestsAnswer: Set<String> = []
     @State private var accessAnswer = ""
     @State private var costAnswer = ""
     @State private var distanceAnswer = ""
-    @State private var activitiesAnswer: Set<String> = []
 
-    private let totalPages = 7
-
-    private static let activityOptions: [String] = [
-        "Walking / being outside",
-        "Creative stuff (art, music, writing)",
-        "Social / being around people",
-        "Quiet / alone time (reading, journaling)",
-        "Movement (stretching, yoga, light exercise)",
-    ]
+    private let totalPages = 6
 
     private static let interestGroups: [(label: String, categories: [ResourceCategory])] = [
         ("Movement & outdoors",  [.fitness, .movement, .natureWellness]),
@@ -46,7 +36,6 @@ struct OnboardingView: View {
         case 3: return !accessAnswer.isEmpty
         case 4: return !costAnswer.isEmpty
         case 5: return !distanceAnswer.isEmpty
-        case 6: return !activitiesAnswer.isEmpty
         default: return true
         }
     }
@@ -81,7 +70,6 @@ struct OnboardingView: View {
                     accessPage.tag(3)
                     costPage.tag(4)
                     distancePage.tag(5)
-                    activitiesPage.tag(6)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .frame(height: 480)
@@ -130,7 +118,6 @@ struct OnboardingView: View {
             prefAccess = accessAnswer
             prefCost = costAnswer
             prefDistance = distanceAnswer
-            prefActivities = activitiesAnswer.joined(separator: ",")
             hasSeenOnboarding = true
             isShowing = false
         }
@@ -155,6 +142,7 @@ struct OnboardingView: View {
                     .foregroundStyle(Theme.cocoaMuted)
                     .multilineTextAlignment(.center)
                     .lineSpacing(5)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(.horizontal, 36)
@@ -210,16 +198,6 @@ struct OnboardingView: View {
         )
     }
 
-    private var activitiesPage: some View {
-        multiSelectPage(
-            icon: "leaf",
-            question: "What kinds of activities do you enjoy?",
-            hint: "Pick everything that fits.",
-            options: Self.activityOptions,
-            selected: $activitiesAnswer
-        )
-    }
-
     // MARK: - Reusable Components
 
     private func singleSelectPage(icon: String, question: String, hint: String, options: [String], selected: Binding<String>) -> some View {
@@ -231,10 +209,12 @@ struct OnboardingView: View {
                         .font(.serifTitle(24, weight: .semibold))
                         .foregroundStyle(Theme.cocoa)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(hint)
                         .font(.sans(14))
                         .foregroundStyle(Theme.cocoaMuted)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
@@ -284,10 +264,12 @@ struct OnboardingView: View {
                         .font(.serifTitle(24, weight: .semibold))
                         .foregroundStyle(Theme.cocoa)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(hint)
                         .font(.sans(14))
                         .foregroundStyle(Theme.cocoaMuted)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 

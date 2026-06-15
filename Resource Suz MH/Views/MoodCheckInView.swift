@@ -7,15 +7,16 @@ struct MoodCheckInView: View {
     @Environment(GamificationStore.self) private var gamification
     @State private var currentPage = 0
 
-    @State private var moodAnswer = ""
+    @State private var moodAnswer: Set<String> = []
     @State private var onMindAnswer = ""
     @State private var needAnswer = ""
 
     private let totalPages = 3
+    private let maxMoodSelections = 3
 
     private var canProceed: Bool {
         switch currentPage {
-        case 0: return !moodAnswer.isEmpty
+        case 0: return moodAnswer.count >= 2
         case 1: return !onMindAnswer.isEmpty
         case 2: return !needAnswer.isEmpty
         default: return true
@@ -102,12 +103,13 @@ struct MoodCheckInView: View {
     // MARK: - Pages
 
     private var moodPage: some View {
-        singleSelectPage(
+        multiSelectPage(
             icon: "heart",
             question: "How are you feeling right now?",
-            hint: "There's no wrong answer.",
-            options: ["Calm", "Okay", "Stressed", "Overwhelmed", "Low energy"],
-            selected: $moodAnswer
+            hint: "Pick 2 or 3 that fit.",
+            options: ["Calm", "Okay", "Stressed", "Overwhelmed", "Low energy", "Anxious", "Hopeful", "Tired"],
+            selected: $moodAnswer,
+            maxSelections: maxMoodSelections
         )
     }
 
@@ -142,10 +144,12 @@ struct MoodCheckInView: View {
                         .font(.serifTitle(24, weight: .semibold))
                         .foregroundStyle(Theme.cocoa)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(hint)
                         .font(.sans(14))
                         .foregroundStyle(Theme.cocoaMuted)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 
@@ -184,6 +188,75 @@ struct MoodCheckInView: View {
             }
         }
         .padding(.horizontal, 28)
+    }
+
+    private func multiSelectPage(icon: String, question: String, hint: String, options: [String], selected: Binding<Set<String>>, maxSelections: Int) -> some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 12) {
+                iconBubble(icon)
+                VStack(spacing: 6) {
+                    Text(question)
+                        .font(.serifTitle(24, weight: .semibold))
+                        .foregroundStyle(Theme.cocoa)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(hint)
+                        .font(.sans(14))
+                        .foregroundStyle(Theme.cocoaMuted)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            VStack(spacing: 10) {
+                ForEach(stride(from: 0, to: options.count, by: 2).map { $0 }, id: \.self) { i in
+                    HStack(spacing: 10) {
+                        chipButton(option: options[i], selected: selected, maxSelections: maxSelections)
+                        if i + 1 < options.count {
+                            chipButton(option: options[i + 1], selected: selected, maxSelections: maxSelections)
+                        } else {
+                            Spacer().frame(maxWidth: .infinity)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 28)
+    }
+
+    private func chipButton(option: String, selected: Binding<Set<String>>, maxSelections: Int) -> some View {
+        let isSelected = selected.wrappedValue.contains(option)
+        let atLimit = selected.wrappedValue.count >= maxSelections
+        return Button {
+            if isSelected {
+                UISelectionFeedbackGenerator().selectionChanged()
+                selected.wrappedValue.remove(option)
+            } else if !atLimit {
+                UISelectionFeedbackGenerator().selectionChanged()
+                selected.wrappedValue.insert(option)
+            }
+        } label: {
+            Text(option)
+                .font(.sans(13))
+                .foregroundStyle(isSelected ? Theme.cream : Theme.cocoa)
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 14)
+                .frame(maxWidth: .infinity, minHeight: 52)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(isSelected ? Theme.terracotta : Theme.cream)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .strokeBorder(isSelected ? Theme.terracotta : Theme.cocoaBorder, lineWidth: 1)
+                        )
+                )
+                .opacity(!isSelected && atLimit ? 0.5 : 1)
+        }
+        .buttonStyle(.plain)
+        .disabled(!isSelected && atLimit)
+        .animation(.spring(duration: 0.2), value: isSelected)
     }
 
     private func iconBubble(_ name: String) -> some View {
