@@ -5,6 +5,7 @@ struct ResourceSuzApp: App {
     @State private var savedStore = SavedStore()
     @State private var resourceStore = ResourceStore()
     @State private var gamificationStore = GamificationStore()
+    @State private var planStore = PlanStore()
     @State private var tabSelection = TabSelection()
     var body: some Scene {
         WindowGroup {
@@ -12,6 +13,7 @@ struct ResourceSuzApp: App {
                 .environment(savedStore)
                 .environment(resourceStore)
                 .environment(gamificationStore)
+                .environment(planStore)
                 .environment(tabSelection)
                 .tint(Theme.terracotta)
                 .preferredColorScheme(.light)
