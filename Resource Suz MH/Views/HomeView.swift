@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(ResourceStore.self) private var store
     @Environment(GamificationStore.self) private var gamification
+    @Environment(TabSelection.self) private var tabSelection
     @AppStorage("pref_area") private var prefArea = ""
     @AppStorage("pref_cost") private var prefCost = ""
     @AppStorage("pref_interests") private var prefInterests = ""
@@ -98,6 +99,7 @@ struct HomeView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         header.padding(.top, 4)
+                        copingPrompt.padding(.top, 12)
                         if store.hasFetchError {
                             fetchErrorBanner.padding(.top, 12)
                         }
@@ -178,6 +180,34 @@ struct HomeView: View {
                 .lineSpacing(2)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var copingPrompt: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            tabSelection.selection = .coping
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(Theme.sage)
+                Text("Need something to try right now?")
+                    .font(.sans(13, weight: .medium))
+                    .foregroundStyle(Theme.cocoa)
+                Spacer()
+                Text("Coping skills")
+                    .font(.sans(13, weight: .semibold))
+                    .foregroundStyle(Theme.terracotta)
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Theme.terracotta)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(RoundedRectangle(cornerRadius: 10).fill(Theme.cream))
+            .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
     }
 
     private var searchBar: some View {
@@ -443,4 +473,4 @@ struct CrisisSheet: View {
     }
 }
 
-#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()).environment(GamificationStore()) }
+#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()).environment(GamificationStore()).environment(TabSelection()) }

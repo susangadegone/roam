@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RootTabView: View {
-    @State private var selection: Tab = .home
+    @Environment(TabSelection.self) private var tabSelection
 
     enum Tab: Hashable { case home, coping, map, saved, profile }
 
@@ -32,7 +32,8 @@ struct RootTabView: View {
     }
 
     var body: some View {
-        TabView(selection: $selection) {
+        @Bindable var tabSelection = tabSelection
+        TabView(selection: $tabSelection.selection) {
             HomeView()
                 .tabItem { Label("Home", systemImage: "house") }
                 .tag(Tab.home)
@@ -92,4 +93,5 @@ struct PlaceholderTab: View {
         .environment(SavedStore())
         .environment(ResourceStore())
         .environment(GamificationStore())
+        .environment(TabSelection())
 }

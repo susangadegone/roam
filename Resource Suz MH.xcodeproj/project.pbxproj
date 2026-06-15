@@ -34,6 +34,7 @@
 		D1D2E3F4A5B6C7D8E9F0A1C3 /* ActivityFollowUpSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C4 /* ActivityFollowUpSheet.swift */; };
 		D1D2E3F4A5B6C7D8E9F0A1C5 /* CopingSkillDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C6 /* CopingSkillDetailView.swift */; };
 		D1D2E3F4A5B6C7D8E9F0A1C7 /* CopingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1C8 /* CopingView.swift */; };
+		D1D2E3F4A5B6C7D8E9F0A1C9 /* TabSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1D2E3F4A5B6C7D8E9F0A1CA /* TabSelection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +67,7 @@
 		D1D2E3F4A5B6C7D8E9F0A1C4 /* ActivityFollowUpSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFollowUpSheet.swift; sourceTree = "<group>"; };
 		D1D2E3F4A5B6C7D8E9F0A1C6 /* CopingSkillDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopingSkillDetailView.swift; sourceTree = "<group>"; };
 		D1D2E3F4A5B6C7D8E9F0A1C8 /* CopingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopingView.swift; sourceTree = "<group>"; };
+		D1D2E3F4A5B6C7D8E9F0A1CA /* TabSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabSelection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -124,6 +126,7 @@
 				A01E1CC52FC8F862002E243E /* ResourceService.swift */,
 				C1D2E3F4A5B6C7D8E9F0A1B3 /* GamificationStore.swift */,
 				D1D2E3F4A5B6C7D8E9F0A1C2 /* CopingSkill.swift */,
+				D1D2E3F4A5B6C7D8E9F0A1CA /* TabSelection.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				D1D2E3F4A5B6C7D8E9F0A1C3 /* ActivityFollowUpSheet.swift in Sources */,
 				D1D2E3F4A5B6C7D8E9F0A1C5 /* CopingSkillDetailView.swift in Sources */,
 				D1D2E3F4A5B6C7D8E9F0A1C7 /* CopingView.swift in Sources */,
+				D1D2E3F4A5B6C7D8E9F0A1C9 /* TabSelection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
