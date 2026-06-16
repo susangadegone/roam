@@ -5,6 +5,8 @@ struct MapView: View {
     @Environment(ResourceStore.self) private var store
     @State private var selectedResource: Resource? = nil
     @State private var navigateTo: Resource? = nil
+    @State private var viewMode: ViewMode = .map
+    @State private var query: String = ""
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 37.758, longitude: -122.435),
@@ -12,45 +14,43 @@ struct MapView: View {
         )
     )
 
+    enum ViewMode: String, CaseIterable {
+        case map = "Map"
+        case list = "List"
+    }
+
     private var mappable: [Resource] {
         store.resources.filter { $0.hasCoordinates }
     }
 
+    private var listResults: [Resource] {
+        let base = store.resources.sorted { $0.distanceMiles < $1.distanceMiles }
+        guard !query.isEmpty else { return base }
+        return base.filter { r in
+            r.name.localizedCaseInsensitiveContains(query)
+            || r.shortDescription.localizedCaseInsensitiveContains(query)
+            || r.neighborhood.localizedCaseInsensitiveContains(query)
+            || r.category.rawValue.localizedCaseInsensitiveContains(query)
+        }
+    }
+
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottom) {
-                Map(position: $position) {
-                    ForEach(mappable) { resource in
-                        Annotation("", coordinate: CLLocationCoordinate2D(
-                            latitude: resource.latitude!,
-                            longitude: resource.longitude!
-                        )) {
-                            MapPin(
-                                resource: resource,
-                                isSelected: selectedResource?.id == resource.id
-                            ) {
-                                withAnimation(.spring(response: 0.3)) {
-                                    selectedResource = (selectedResource?.id == resource.id) ? nil : resource
-                                }
-                            }
-                        }
-                    }
-                }
-                .mapStyle(.standard)
-                .onTapGesture {
-                    withAnimation(.easeOut(duration: 0.2)) { selectedResource = nil }
+            ZStack(alignment: .top) {
+                Theme.canvas.ignoresSafeArea()
+
+                switch viewMode {
+                case .map:
+                    mapContent
+                case .list:
+                    listContent
                 }
 
-                if let r = selectedResource {
-                    MapCallout(resource: r) {
-                        navigateTo = r
-                    }
+                viewModePicker
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                }
+                    .padding(.top, 8)
             }
-            .ignoresSafeArea(edges: .bottom)
+            .ignoresSafeArea(edges: viewMode == .map ? .bottom : [])
             .navigationTitle("Map")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Theme.canvas, for: .navigationBar)
@@ -58,6 +58,113 @@ struct MapView: View {
                 ResourceDetailView(resource: r)
             }
         }
+    }
+
+    private var viewModePicker: some View {
+        Picker("View", selection: $viewMode) {
+            ForEach(ViewMode.allCases, id: \.self) { mode in
+                Text(mode.rawValue).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .background(Theme.cream, in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var mapContent: some View {
+        ZStack(alignment: .bottom) {
+            Map(position: $position) {
+                ForEach(mappable) { resource in
+                    Annotation("", coordinate: CLLocationCoordinate2D(
+                        latitude: resource.latitude!,
+                        longitude: resource.longitude!
+                    )) {
+                        MapPin(
+                            resource: resource,
+                            isSelected: selectedResource?.id == resource.id
+                        ) {
+                            withAnimation(.spring(response: 0.3)) {
+                                selectedResource = (selectedResource?.id == resource.id) ? nil : resource
+                            }
+                        }
+                    }
+                }
+            }
+            .mapStyle(.standard)
+            .onTapGesture {
+                withAnimation(.easeOut(duration: 0.2)) { selectedResource = nil }
+            }
+
+            if let r = selectedResource {
+                MapCallout(resource: r) {
+                    navigateTo = r
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 24)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+    }
+
+    private var listContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                Color.clear.frame(height: 44)
+                listSearchBar
+                if listResults.isEmpty {
+                    emptyListState
+                } else {
+                    ForEach(listResults) { r in
+                        ResourceCard(resource: r) { navigateTo = r }
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+        }
+        .scrollDismissesKeyboard(.immediately)
+    }
+
+    private var listSearchBar: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 15, weight: .regular))
+                .foregroundStyle(Theme.cocoaMuted)
+            TextField("Search places", text: $query)
+                .font(.sans(15))
+                .foregroundStyle(Theme.cocoa)
+                .tint(Theme.terracotta)
+                .submitLabel(.search)
+            if !query.isEmpty {
+                Button {
+                    query = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(Theme.cocoaMuted)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .frame(height: 48)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.cream))
+        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+    }
+
+    private var emptyListState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "tray")
+                .font(.system(size: 28, weight: .light))
+                .foregroundStyle(Theme.cocoaMuted)
+            Text("No results found.")
+                .font(.serifTitle(18, weight: .semibold))
+                .foregroundStyle(Theme.cocoa)
+            Text("Try a different search.")
+                .font(.sans(14))
+                .foregroundStyle(Theme.cocoaMuted)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.cream.opacity(0.6)))
+        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
     }
 }
 

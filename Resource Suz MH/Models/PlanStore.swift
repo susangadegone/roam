@@ -17,6 +17,8 @@ final class PlanStore {
     private(set) var plannedSkillIDs: [String]
     private(set) var completedSkillIDs: Set<String>
 
+    private let maxPlannedSkills = 3
+
     var plannedSkills: [CopingSkill] {
         plannedSkillIDs.compactMap { id in CopingSkill.all.first { $0.id == id } }
     }
@@ -46,6 +48,29 @@ final class PlanStore {
         defaults.set(Self.dateFormatter.string(from: Date()), forKey: Self.planDateKey)
         defaults.set(ids, forKey: Self.plannedSkillIDsKey)
         defaults.set([], forKey: Self.completedSkillIDsKey)
+    }
+
+    func isPlanned(_ skill: CopingSkill) -> Bool {
+        plannedSkillIDs.contains(skill.id)
+    }
+
+    /// Adds or removes a single skill from today's plan, respecting the daily cap.
+    /// Returns `false` if the skill couldn't be added because the plan is full.
+    @discardableResult
+    func togglePlanned(_ skill: CopingSkill) -> Bool {
+        if plannedSkillIDs.contains(skill.id) {
+            plannedSkillIDs.removeAll { $0 == skill.id }
+            completedSkillIDs.remove(skill.id)
+        } else if plannedSkillIDs.count < maxPlannedSkills {
+            plannedSkillIDs.append(skill.id)
+        } else {
+            return false
+        }
+        let defaults = UserDefaults.standard
+        defaults.set(Self.dateFormatter.string(from: Date()), forKey: Self.planDateKey)
+        defaults.set(plannedSkillIDs, forKey: Self.plannedSkillIDsKey)
+        defaults.set(Array(completedSkillIDs), forKey: Self.completedSkillIDsKey)
+        return true
     }
 
     func toggleCompletion(_ id: String) {

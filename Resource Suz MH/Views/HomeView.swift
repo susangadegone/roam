@@ -4,6 +4,7 @@ struct HomeView: View {
     @Environment(ResourceStore.self) private var store
     @Environment(GamificationStore.self) private var gamification
     @Environment(TabSelection.self) private var tabSelection
+    @Environment(PlanStore.self) private var plan
     @AppStorage("pref_area") private var prefArea = ""
     @AppStorage("pref_cost") private var prefCost = ""
     @AppStorage("pref_interests") private var prefInterests = ""
@@ -14,8 +15,11 @@ struct HomeView: View {
     @State private var selectedCategory: ResourceCategory? = nil
     @State private var selectedArea: ResourceArea? = nil
     @State private var selectedResource: Resource? = nil
+    @State private var selectedCopingSkill: CopingSkill? = nil
     @State private var showingCrisis: Bool = false
     @State private var showingHowToUse: Bool = false
+    @State private var showingPlanPicker: Bool = false
+    @State private var showingFilters: Bool = false
 
     private var preferredCategories: Set<ResourceCategory> {
         Set(prefInterests.split(separator: ",").compactMap { ResourceCategory(rawValue: String($0)) })
@@ -85,16 +89,12 @@ struct HomeView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         header.padding(.top, 4)
-                        copingPrompt.padding(.top, 12)
+                        todaySection.padding(.top, 12)
                         if store.hasFetchError {
                             fetchErrorBanner.padding(.top, 12)
                         }
-                        searchBar.padding(.top, 16)
-                        actionButtons.padding(.top, 16)
-                        filterChips.padding(.top, 24)
-                        areaChips.padding(.top, 8)
-                        resultsHeader.padding(.top, 24)
-                        resultsList.padding(.top, 12)
+                        searchAndFilters.padding(.top, 16)
+                        nearYouSection.padding(.top, 24)
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 24)
@@ -105,11 +105,17 @@ struct HomeView: View {
             .navigationDestination(item: $selectedResource) { r in
                 ResourceDetailView(resource: r)
             }
+            .navigationDestination(item: $selectedCopingSkill) { skill in
+                CopingSkillDetailView(skill: skill)
+            }
             .sheet(isPresented: $showingCrisis) {
                 CrisisSheet().presentationDetents([.medium, .large])
             }
             .sheet(isPresented: $showingHowToUse) {
                 NavigationStack { HowToUseView() }
+            }
+            .sheet(isPresented: $showingPlanPicker) {
+                PlanPickerView()
             }
             .onAppear {
                 if selectedArea == nil && selectedCategory == nil && !freeOnly {
@@ -120,12 +126,22 @@ struct HomeView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingHowToUse = true
-                    } label: {
-                        Image(systemName: "info.circle")
-                            .font(.system(size: 17, weight: .regular))
-                            .foregroundStyle(Theme.cocoa)
+                    HStack(spacing: 4) {
+                        Button {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            showingCrisis = true
+                        } label: {
+                            Image(systemName: "phone.circle")
+                                .font(.system(size: 20, weight: .regular))
+                                .foregroundStyle(Theme.terracotta)
+                        }
+                        Button {
+                            showingHowToUse = true
+                        } label: {
+                            Image(systemName: "info.circle")
+                                .font(.system(size: 17, weight: .regular))
+                                .foregroundStyle(Theme.cocoa)
+                        }
                     }
                 }
             }
@@ -168,32 +184,94 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var copingPrompt: some View {
-        Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            tabSelection.selection = .coping
-        } label: {
-            HStack(spacing: 10) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(Theme.sage)
-                Text("Need something to try right now?")
-                    .font(.sans(13, weight: .medium))
-                    .foregroundStyle(Theme.cocoa)
-                Spacer()
-                Text("Coping skills")
-                    .font(.sans(13, weight: .semibold))
-                    .foregroundStyle(Theme.terracotta)
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Theme.terracotta)
+    /// Combines the "plan your day" / today's plan checklist with a quick link
+    /// into the Coping tab, so the top of Home only has a single card for "today".
+    private var todaySection: some View {
+        PaperCard(stripeColor: Theme.terracotta) {
+            VStack(alignment: .leading, spacing: 12) {
+                if plan.plannedSkills.isEmpty {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        showingPlanPicker = true
+                    } label: {
+                        HStack(spacing: 14) {
+                            Image(systemName: "list.bullet.clipboard")
+                                .font(.system(size: 18, weight: .light))
+                                .foregroundStyle(Theme.terracotta)
+                                .frame(width: 28)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Things to try today")
+                                    .font(.serifTitle(16, weight: .semibold))
+                                    .foregroundStyle(Theme.cocoa)
+                                Text("Pick a few coping skills to come back to anytime today.")
+                                    .font(.sans(13))
+                                    .foregroundStyle(Theme.cocoaMuted)
+                            }
+                            Spacer(minLength: 8)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(Theme.cocoaMuted)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    HStack {
+                        Text("Things to try today")
+                            .font(.serifTitle(16, weight: .semibold))
+                            .foregroundStyle(Theme.cocoa)
+                        Spacer()
+                        Button {
+                            showingPlanPicker = true
+                        } label: {
+                            Text("Edit")
+                                .font(.sans(13, weight: .semibold))
+                                .foregroundStyle(Theme.terracotta)
+                        }
+                    }
+                    VStack(spacing: 10) {
+                        ForEach(plan.plannedSkills) { skill in
+                            PlanItemRow(
+                                skill: skill,
+                                isCompleted: plan.isCompleted(skill.id),
+                                onToggle: {
+                                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                                    plan.toggleCompletion(skill.id)
+                                    if plan.isCompleted(skill.id) {
+                                        gamification.completeActivity(
+                                            resourceID: "plan-\(skill.id)",
+                                            title: skill.title,
+                                            followUp: skill.category.rawValue
+                                        )
+                                    }
+                                },
+                                onTap: { selectedCopingSkill = skill }
+                            )
+                        }
+                    }
+                }
+
+                Divider().overlay(Theme.cocoaBorder)
+
+                Button {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    tabSelection.selection = .coping
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(Theme.sage)
+                        Text("Need something to try right now?")
+                            .font(.sans(13, weight: .medium))
+                            .foregroundStyle(Theme.cocoa)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(Theme.cocoaMuted)
+                    }
+                }
+                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
-            .background(RoundedRectangle(cornerRadius: 10).fill(Theme.cream))
-            .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
         }
-        .buttonStyle(.plain)
     }
 
     private var searchBar: some View {
@@ -227,10 +305,50 @@ struct HomeView: View {
         )
     }
 
-    private var actionButtons: some View {
-        VStack(spacing: 12) {
-            freeToggle
-            crisisButton
+    private var activeFilterCount: Int {
+        (freeOnly ? 1 : 0) + (selectedCategory == nil ? 0 : 1) + (selectedArea == nil ? 0 : 1)
+    }
+
+    /// Search and filters live together as one group, since filtering is just
+    /// a more specific way of searching.
+    private var searchAndFilters: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            searchBar
+            filtersSection
+        }
+    }
+
+    private var filtersSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Button {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                withAnimation(.easeInOut(duration: 0.2)) { showingFilters.toggle() }
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 14, weight: .medium))
+                    Text(activeFilterCount == 0 ? "Filters" : "Filters · \(activeFilterCount) active")
+                        .font(.sans(15, weight: .medium))
+                    Spacer()
+                    Image(systemName: showingFilters ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .foregroundStyle(Theme.cocoa)
+                .padding(.horizontal, 16)
+                .frame(height: 48)
+                .frame(maxWidth: .infinity)
+                .background(RoundedRectangle(cornerRadius: 8).fill(Theme.cream))
+                .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+
+            if showingFilters {
+                VStack(alignment: .leading, spacing: 12) {
+                    freeToggle
+                    filterChips
+                    areaChips
+                }
+            }
         }
     }
 
@@ -257,29 +375,6 @@ struct HomeView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(freeOnly ? Color.clear : Theme.cocoaBorder, lineWidth: 1)
-            )
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var crisisButton: some View {
-        Button {
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-            showingCrisis = true
-        } label: {
-            HStack {
-                Text("Crisis support")
-                    .font(.sans(15, weight: .semibold))
-                Spacer()
-                Image(systemName: "arrow.right")
-                    .font(.system(size: 14, weight: .semibold))
-            }
-            .foregroundStyle(Theme.cream)
-            .padding(.horizontal, 16)
-            .frame(height: 48)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 8).fill(Theme.terracotta)
             )
         }
         .buttonStyle(.plain)
@@ -329,17 +424,44 @@ struct HomeView: View {
         }
     }
 
-    @ViewBuilder
-    private var resultsList: some View {
-        if filtered.isEmpty {
-            emptyState
-        } else {
-            VStack(spacing: 12) {
-                ForEach(filtered) { r in
-                    ResourceCard(resource: r) { selectedResource = r }
+    private let nearYouPreviewCount = 4
+
+    /// A short preview of nearby resources, with the full browsable list (plus
+    /// the map) living on the Map tab so Home doesn't need to show everything.
+    private var nearYouSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            resultsHeader
+            if filtered.isEmpty {
+                emptyState
+            } else {
+                VStack(spacing: 12) {
+                    ForEach(filtered.prefix(nearYouPreviewCount)) { r in
+                        ResourceCard(resource: r) { selectedResource = r }
+                    }
                 }
+                seeAllButton
             }
         }
+    }
+
+    private var seeAllButton: some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            tabSelection.selection = .map
+        } label: {
+            HStack(spacing: 6) {
+                Text("See all on map")
+                    .font(.sans(14, weight: .semibold))
+                Image(systemName: "arrow.right")
+                    .font(.system(size: 12, weight: .semibold))
+            }
+            .foregroundStyle(Theme.terracotta)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(RoundedRectangle(cornerRadius: 8).fill(Theme.cream))
+            .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
     }
 
     private var emptyState: some View {
@@ -364,6 +486,56 @@ struct HomeView: View {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(Theme.cocoaBorder, lineWidth: 1)
         )
+    }
+}
+
+private struct PlanItemRow: View {
+    let skill: CopingSkill
+    let isCompleted: Bool
+    var onToggle: () -> Void
+    var onTap: () -> Void
+
+    var body: some View {
+        HStack(spacing: 14) {
+            Button(action: onToggle) {
+                Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22, weight: .regular))
+                    .foregroundStyle(isCompleted ? Theme.sage : Theme.cocoaMuted)
+            }
+            .buttonStyle(.plain)
+            .frame(width: 28)
+
+            Button {
+                onTap()
+            } label: {
+                HStack(spacing: 14) {
+                    Image(systemName: skill.icon)
+                        .font(.system(size: 16, weight: .light))
+                        .foregroundStyle(Theme.sage)
+                        .frame(width: 22)
+                    Text(skill.title)
+                        .font(.sans(15, weight: .medium))
+                        .foregroundStyle(isCompleted ? Theme.cocoaMuted : Theme.cocoa)
+                        .strikethrough(isCompleted)
+                    Spacer(minLength: 8)
+                    Text("\(skill.estimatedMinutes)m")
+                        .font(.sans(12, weight: .semibold))
+                        .foregroundStyle(Theme.cocoaMuted)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 52)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Theme.cream)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .strokeBorder(Theme.cocoaBorder, lineWidth: 1)
+                )
+        )
+        .animation(.spring(duration: 0.2), value: isCompleted)
     }
 }
 
@@ -459,4 +631,4 @@ struct CrisisSheet: View {
     }
 }
 
-#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()).environment(GamificationStore()).environment(TabSelection()) }
+#Preview { HomeView().environment(SavedStore()).environment(ResourceStore()).environment(GamificationStore()).environment(TabSelection()).environment(PlanStore()) }

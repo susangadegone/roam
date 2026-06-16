@@ -3,6 +3,8 @@ import SwiftUI
 struct CopingSkillDetailView: View {
     let skill: CopingSkill
     @Environment(GamificationStore.self) private var gamification
+    @Environment(SavedStore.self) private var saved
+    @Environment(PlanStore.self) private var plan
     @State private var showingCompletionFollowUp = false
     @State private var showingCompletionConfirmation = false
     @State private var completionAwardedPoints = true
@@ -136,6 +138,10 @@ struct CopingSkillDetailView: View {
 
     private var actionBar: some View {
         VStack(spacing: 8) {
+            HStack(spacing: 8) {
+                favoriteButton
+                planButton
+            }
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 showingCompletionFollowUp = true
@@ -158,9 +164,56 @@ struct CopingSkillDetailView: View {
         .padding(.bottom, 8)
         .background(Theme.canvas)
     }
+
+    private var favoriteButton: some View {
+        let isFavorite = saved.isSaved(skill)
+        return Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            saved.toggle(skill)
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .font(.system(size: 14, weight: .semibold))
+                Text(isFavorite ? "Favorited" : "Favorite")
+                    .font(.sans(15, weight: .semibold))
+            }
+            .foregroundStyle(isFavorite ? Theme.cream : Theme.cocoa)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(Capsule().fill(isFavorite ? Theme.terracotta : Theme.cream))
+            .overlay(Capsule().strokeBorder(isFavorite ? Color.clear : Theme.cocoaBorder, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var planButton: some View {
+        let isPlanned = plan.isPlanned(skill)
+        return Button {
+            if plan.togglePlanned(skill) {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            } else {
+                UINotificationFeedbackGenerator().notificationOccurred(.warning)
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: isPlanned ? "checkmark.circle.fill" : "plus.circle")
+                    .font(.system(size: 14, weight: .semibold))
+                Text(isPlanned ? "In today's plan" : "Add to today's plan")
+                    .font(.sans(15, weight: .semibold))
+            }
+            .foregroundStyle(isPlanned ? Theme.cream : Theme.cocoa)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(Capsule().fill(isPlanned ? Theme.sage : Theme.cream))
+            .overlay(Capsule().strokeBorder(isPlanned ? Color.clear : Theme.cocoaBorder, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
 }
 
 #Preview {
     NavigationStack { CopingSkillDetailView(skill: CopingSkill.all[0]) }
         .environment(GamificationStore())
+        .environment(SavedStore())
+        .environment(PlanStore())
 }

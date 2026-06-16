@@ -17,7 +17,7 @@ struct OnboardingView: View {
     @State private var costAnswer = ""
     @State private var distanceAnswer = ""
 
-    private let totalPages = 6
+    private let totalPages = 7
 
     private static let interestGroups: [(label: String, categories: [ResourceCategory])] = [
         ("Movement & outdoors",  [.fitness, .movement, .natureWellness]),
@@ -70,6 +70,7 @@ struct OnboardingView: View {
                     accessPage.tag(3)
                     costPage.tag(4)
                     distancePage.tag(5)
+                    tourPage.tag(6)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .frame(height: 480)
@@ -89,7 +90,7 @@ struct OnboardingView: View {
                 Button {
                     advance()
                 } label: {
-                    Text(currentPage == 0 ? "Get started" : currentPage < totalPages - 1 ? "Next" : "Let's explore")
+                    Text(currentPage == 0 ? "Get started" : currentPage < totalPages - 1 ? "Next" : "Start exploring")
                         .font(.sans(17, weight: .semibold))
                         .foregroundStyle(Theme.cream)
                         .frame(maxWidth: .infinity)
@@ -195,6 +196,104 @@ struct OnboardingView: View {
             hint: "We'll prioritize accordingly.",
             options: ["Close to home", "A short trip is fine", "Take me anywhere"],
             selected: $distanceAnswer
+        )
+    }
+
+    private struct TourItem {
+        let icon: String
+        let tab: String
+        let body: String
+    }
+
+    private var tourItems: [TourItem] {
+        var items: [TourItem] = []
+
+        // Coping — always shown, description adapts to access/distance
+        let copingBody: String
+        if accessAnswer == "Solo, on my own terms" || distanceAnswer == "Close to home" {
+            copingBody = "Breathing exercises, grounding techniques, short stretches — at home, on BART, wherever you are."
+        } else {
+            copingBody = "Quick skills for hard moments. No setup, no commute — works anywhere."
+        }
+        items.append(TourItem(icon: "sparkles", tab: "Coping", body: copingBody))
+
+        // Home — always shown, description adapts to top interest + area
+        let area = areaAnswer.isEmpty ? "your area" : areaAnswer
+        let homeBody: String
+        if interestsAnswer.contains("Movement & outdoors") {
+            homeBody = "Parks, trails, and fitness spots near you in \(area). Filter by what fits your energy today."
+        } else if interestsAnswer.contains("Events & community") {
+            homeBody = "Free events and community spots in \(area). Search by neighborhood or filter by category."
+        } else if interestsAnswer.contains("Learning & culture") {
+            homeBody = "Talks, libraries, and cultural spots in \(area). Filter by cost or distance."
+        } else if interestsAnswer.contains("Creative & art") {
+            homeBody = "Creative spaces and art resources in \(area). Filter by cost or distance."
+        } else {
+            homeBody = "Free and low-cost spots near you in \(area). Search or filter by what fits."
+        }
+        items.append(TourItem(icon: "house", tab: "Home", body: homeBody))
+
+        // Map — only if they're willing to travel
+        if distanceAnswer != "Close to home" {
+            items.append(TourItem(icon: "map", tab: "Map", body: "See everything as pins. Good for picking based on what's actually near you right now."))
+        }
+
+        // Crisis — always last
+        items.append(TourItem(icon: "phone", tab: "Crisis support", body: "Always one tap away from the Home tab if you need it now."))
+
+        return items
+    }
+
+    private var tourPage: some View {
+        VStack(spacing: 20) {
+            VStack(spacing: 12) {
+                iconBubble("map.fill")
+                VStack(spacing: 6) {
+                    Text("Here's where to start")
+                        .font(.serifTitle(24, weight: .semibold))
+                        .foregroundStyle(Theme.cocoa)
+                        .multilineTextAlignment(.center)
+                    Text("Based on what you shared.")
+                        .font(.sans(14))
+                        .foregroundStyle(Theme.cocoaMuted)
+                        .multilineTextAlignment(.center)
+                }
+            }
+            VStack(spacing: 10) {
+                ForEach(tourItems, id: \.tab) { item in
+                    tourRow(icon: item.icon, title: item.tab, body: item.body)
+                }
+            }
+        }
+        .padding(.horizontal, 28)
+    }
+
+    private func tourRow(icon: String, title: String, body: String) -> some View {
+        HStack(spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(Theme.canvas)
+                    .frame(width: 40, height: 40)
+                    .overlay(Circle().strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+                Image(systemName: icon)
+                    .font(.system(size: 17, weight: .light))
+                    .foregroundStyle(Theme.terracotta)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.sans(15, weight: .semibold))
+                    .foregroundStyle(Theme.cocoa)
+                Text(body)
+                    .font(.sans(13))
+                    .foregroundStyle(Theme.cocoaMuted)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Theme.cream)
+                .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Theme.cocoaBorder, lineWidth: 1))
         )
     }
 

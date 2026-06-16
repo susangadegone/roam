@@ -8,11 +8,12 @@ struct MoodCheckInView: View {
     @State private var currentPage = 0
 
     @State private var moodAnswer: Set<String> = []
-    @State private var onMindAnswer = ""
+    @State private var onMindAnswer: Set<String> = []
     @State private var needAnswer = ""
 
     private let totalPages = 3
     private let maxMoodSelections = 3
+    private let maxOnMindSelections = 3
 
     private var canProceed: Bool {
         switch currentPage {
@@ -58,7 +59,7 @@ struct MoodCheckInView: View {
                     needPage.tag(2)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(height: 480)
+                .frame(height: 520)
 
                 Spacer()
 
@@ -114,12 +115,13 @@ struct MoodCheckInView: View {
     }
 
     private var onMindPage: some View {
-        singleSelectPage(
+        multiSelectPage(
             icon: "cloud",
             question: "What's on your mind?",
-            hint: "Pick what feels closest.",
+            hint: "Pick what feels closest. You can choose more than one.",
             options: ["Work or school", "Relationships", "Health", "Money", "A bit of everything", "Nothing in particular"],
-            selected: $onMindAnswer
+            selected: $onMindAnswer,
+            maxSelections: maxOnMindSelections
         )
     }
 
@@ -136,6 +138,7 @@ struct MoodCheckInView: View {
     // MARK: - Reusable Components
 
     private func singleSelectPage(icon: String, question: String, hint: String, options: [String], selected: Binding<String>) -> some View {
+        ScrollView {
         VStack(spacing: 20) {
             VStack(spacing: 12) {
                 iconBubble(icon)
@@ -188,9 +191,13 @@ struct MoodCheckInView: View {
             }
         }
         .padding(.horizontal, 28)
+        .padding(.vertical, 12)
+        }
+        .scrollIndicators(.hidden)
     }
 
     private func multiSelectPage(icon: String, question: String, hint: String, options: [String], selected: Binding<Set<String>>, maxSelections: Int) -> some View {
+        ScrollView {
         VStack(spacing: 20) {
             VStack(spacing: 12) {
                 iconBubble(icon)
@@ -222,6 +229,9 @@ struct MoodCheckInView: View {
             }
         }
         .padding(.horizontal, 28)
+        .padding(.vertical, 12)
+        }
+        .scrollIndicators(.hidden)
     }
 
     private func chipButton(option: String, selected: Binding<Set<String>>, maxSelections: Int) -> some View {

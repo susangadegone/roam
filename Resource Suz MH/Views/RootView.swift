@@ -3,69 +3,140 @@ import SwiftUI
 struct RootView: View {
     @AppStorage("hasAccount") private var hasAccount = false
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage("hasSeenMoodIntro") private var hasSeenMoodIntro = false
+    @AppStorage("hasSeenAppTour") private var hasSeenAppTour = false
 
     @State private var showMoodCheckIn = true
     @State private var showRecheckPrompt = false
+    @State private var showingTour = false
 
     private static let recheckInterval: Duration = .seconds(30 * 60)
 
-    /// A single, ordered cover flow (auth → onboarding → mood check-in) so the
-    /// app never briefly reveals the home tabs in between steps.
-    private enum Cover: Identifiable {
-        case auth, onboarding, moodCheckIn
-        var id: Self { self }
+    private enum Cover {
+        case auth, onboarding, moodIntro, moodCheckIn
     }
 
     private var activeCover: Cover? {
         if !hasAccount { return .auth }
         if !hasSeenOnboarding { return .onboarding }
+        if !hasSeenMoodIntro { return .moodIntro }
         if showMoodCheckIn { return .moodCheckIn }
         return nil
     }
 
     var body: some View {
-        RootTabView()
-            .fullScreenCover(item: Binding(
-                get: { activeCover },
-                set: { _ in }
-            )) { cover in
-                switch cover {
-                case .auth:
-                    AuthView()
-                case .onboarding:
-                    OnboardingView(isShowing: Binding(
-                        get: { !hasSeenOnboarding },
-                        set: { _ in }
-                    ))
-                case .moodCheckIn:
-                    MoodCheckInView(isShowing: $showMoodCheckIn)
+        ZStack {
+            RootTabView()
+                .fullScreenCover(isPresented: Binding(
+                    get: { activeCover != nil },
+                    set: { _ in }
+                )) {
+                    switch activeCover {
+                    case .auth:
+                        AuthView()
+                    case .onboarding:
+                        OnboardingView(isShowing: Binding(
+                            get: { !hasSeenOnboarding },
+                            set: { _ in }
+                        ))
+                    case .moodIntro:
+                        MoodIntroView()
+                    case .moodCheckIn:
+                        MoodCheckInView(isShowing: $showMoodCheckIn)
+                    case nil:
+                        EmptyView()
+                    }
                 }
-            }
-            .overlay(alignment: .bottom) {
-                if showRecheckPrompt {
-                    MoodRecheckBanner(
-                        onCheckIn: {
-                            showRecheckPrompt = false
-                            showMoodCheckIn = true
-                        },
-                        onDismiss: { showRecheckPrompt = false }
-                    )
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 90)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                .overlay(alignment: .bottom) {
+                    if showRecheckPrompt {
+                        MoodRecheckBanner(
+                            onCheckIn: {
+                                showRecheckPrompt = false
+                                showMoodCheckIn = true
+                            },
+                            onDismiss: { showRecheckPrompt = false }
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 90)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
                 }
-            }
-            .animation(.spring(duration: 0.35), value: showRecheckPrompt)
-            .task {
-                try? await Task.sleep(for: Self.recheckInterval)
-                if !showMoodCheckIn {
-                    showRecheckPrompt = true
+                .animation(.spring(duration: 0.35), value: showRecheckPrompt)
+                .task {
+                    try? await Task.sleep(for: Self.recheckInterval)
+                    if !showMoodCheckIn {
+                        showRecheckPrompt = true
+                    }
                 }
+                .onChange(of: showMoodCheckIn) { _, isShowing in
+                    if !isShowing && hasAccount && hasSeenOnboarding && hasSeenMoodIntro && !hasSeenAppTour {
+                        Task {
+                            try? await Task.sleep(for: .milliseconds(500))
+                            withAnimation(.easeIn(duration: 0.3)) { showingTour = true }
+                        }
+                    }
+                }
+
+            if showingTour {
+                AppTourOverlay(isShowing: $showingTour)
+                    .transition(.opacity)
             }
+        }
     }
 }
 
-/// Gentle nature-themed prompt offering a fresh mood check-in after extended use.
+private struct MoodIntroView: View {
+    @AppStorage("hasSeenMoodIntro") private var hasSeenMoodIntro = false
+
+    var body: some View {
+        ZStack {
+            Theme.canvas.ignoresSafeArea()
+            VStack(spacing: 0) {
+                Spacer()
+                VStack(spacing: 28) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.cream)
+                            .frame(width: 80, height: 80)
+                            .overlay(Circle().strokeBorder(Theme.cocoaBorder, lineWidth: 1))
+                        Image(systemName: "waveform.path.ecg")
+                            .font(.system(size: 32, weight: .light))
+                            .foregroundStyle(Theme.terracotta)
+                    }
+                    VStack(spacing: 12) {
+                        Text("How are you feeling today?")
+                            .font(.serifTitle(26, weight: .semibold))
+                            .foregroundStyle(Theme.cocoa)
+                            .multilineTextAlignment(.center)
+                        Text("We ask this each time you open roam.\nYour answer helps us show you what fits right now.")
+                            .font(.sans(15))
+                            .foregroundStyle(Theme.cocoaMuted)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(5)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .padding(.horizontal, 32)
+                Spacer()
+                Button {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    hasSeenMoodIntro = true
+                } label: {
+                    Text("Got it")
+                        .font(.sans(17, weight: .semibold))
+                        .foregroundStyle(Theme.cream)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 56)
+                        .background(Capsule().fill(Theme.terracotta))
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 52)
+            }
+        }
+    }
+}
+
 private struct MoodRecheckBanner: View {
     var onCheckIn: () -> Void
     var onDismiss: () -> Void
