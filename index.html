@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roam — Mental health resources near you</title>
+  <meta name="description" content="Roam helps you find free and low-cost mental health resources in San Francisco and the East Bay. Small steps, every day." />
+  <style>
+    :root {
+      --terracotta: #D4816E;
+      --cream: #F5F1E8;
+      --cream-deep: #EEE8DA;
+      --cocoa: #4A3933;
+      --cocoa-muted: rgba(74, 57, 51, 0.6);
+      --cocoa-border: rgba(74, 57, 51, 0.18);
+      --sage: #8B9D83;
+      --canvas: #FAF7F0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--canvas);
+      color: var(--cocoa);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--cocoa-border);
+      background: var(--canvas);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-logo {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--cocoa);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-badge {
+      background: var(--cream);
+      border: 1px solid var(--cocoa-border);
+      color: var(--cocoa-muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 32px 72px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 7vw, 62px);
+      font-weight: 600;
+      color: var(--cocoa);
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      font-size: clamp(15px, 2.2vw, 18px);
+      color: var(--cocoa-muted);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Screenshots ── */
+    .screenshots {
+      background: var(--cream-deep);
+      border-top: 1px solid var(--cocoa-border);
+      border-bottom: 1px solid var(--cocoa-border);
+      padding: 56px 32px;
+      overflow: hidden;
+    }
+
+    .screenshots-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cocoa-muted);
+      margin-bottom: 40px;
+    }
+
+    .phone-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .phone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .phone {
+      width: 200px;
+      height: 432px;
+      border-radius: 36px;
+      border: 2px solid var(--cocoa-border);
+      background: var(--cream);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(74, 57, 51, 0.1);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 6px;
+      background: var(--cocoa-border);
+      border-radius: 3px;
+      z-index: 2;
+    }
+
+    .phone img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Placeholder shown when no image is provided */
+    .phone-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cocoa-muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .phone-caption {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cocoa-muted);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      max-width: 960px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--cocoa-border);
+    }
+
+    /* ── Features ── */
+    .features {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 64px 32px;
+    }
+
+    .features-intro {
+      max-width: 520px;
+      margin-bottom: 44px;
+    }
+
+    .features-intro h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 4.5vw, 38px);
+      font-weight: 600;
+      color: var(--cocoa);
+      letter-spacing: -0.4px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .features-intro p {
+      font-size: 15px;
+      color: var(--cocoa-muted);
+      line-height: 1.65;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--cream);
+      border: 1px solid var(--cocoa-border);
+      border-radius: 14px;
+      padding: 24px 20px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+    }
+
+    .feature-card.stripe-terracotta::before { background: var(--terracotta); }
+    .feature-card.stripe-sage::before        { background: var(--sage); }
+    .feature-card.stripe-cocoa::before       { background: var(--cocoa); }
+
+    .feature-card h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--cocoa);
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--cocoa-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Category chips ── */
+    .chips-section {
+      border-top: 1px solid var(--cocoa-border);
+      border-bottom: 1px solid var(--cocoa-border);
+      padding: 52px 32px;
+    }
+
+    .chips-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .chips-section h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 3.5vw, 30px);
+      font-weight: 600;
+      color: var(--cocoa);
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .chips-section .sub {
+      font-size: 15px;
+      color: var(--cocoa-muted);
+      margin-bottom: 26px;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .chip {
+      background: var(--canvas);
+      border: 1px solid var(--cocoa-border);
+      color: var(--cocoa);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    /* ── Area ── */
+    .area-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 64px 32px;
+      text-align: center;
+    }
+
+    .area-section h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 3.5vw, 30px);
+      font-weight: 600;
+      color: var(--cocoa);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .area-section > p {
+      font-size: 15px;
+      color: var(--cocoa-muted);
+      margin-bottom: 28px;
+    }
+
+    .area-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      text-align: left;
+    }
+
+    @media (max-width: 480px) {
+      .area-cards { grid-template-columns: 1fr; }
+    }
+
+    .area-card {
+      background: var(--cream);
+      border: 1px solid var(--cocoa-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .area-card .area-name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--cocoa);
+      margin-bottom: 5px;
+    }
+
+    .area-card .area-desc {
+      font-size: 13px;
+      color: var(--cocoa-muted);
+      line-height: 1.55;
+    }
+
+    /* ── Closing ── */
+    .closing {
+      background: var(--cocoa);
+      padding: 64px 32px;
+      text-align: center;
+    }
+
+    .closing h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 4.5vw, 40px);
+      font-weight: 600;
+      color: var(--cream);
+      letter-spacing: -0.4px;
+      margin-bottom: 12px;
+    }
+
+    .closing p {
+      font-size: 16px;
+      color: rgba(245, 241, 232, 0.6);
+      max-width: 380px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid rgba(74, 57, 51, 0.12);
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--cocoa-muted);
+    }
+
+    footer a {
+      color: var(--terracotta);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">roam</a>
+  <span class="nav-badge">Coming soon</span>
+</nav>
+
+<section class="hero">
+  <span class="hero-eyebrow">San Francisco &amp; East Bay</span>
+  <h1>Small steps, every day.</h1>
+  <p>Roam helps you find free and low-cost mental health resources near you — classes, drop-ins, peer support, and more.</p>
+</section>
+
+<!-- Screenshots — replace src values with your actual screenshots -->
+<section class="screenshots">
+  <p class="screenshots-label">A look inside</p>
+  <div class="phone-row">
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <!-- <img src="screenshots/home.png" alt="Home screen" /> -->
+        <div class="phone-placeholder">Add home.png here</div>
+      </div>
+      <span class="phone-caption">Home</span>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <!-- <img src="screenshots/coping.png" alt="Coping skills" /> -->
+        <div class="phone-placeholder">Add coping.png here</div>
+      </div>
+      <span class="phone-caption">Coping</span>
+    </div>
+
+    <div class="phone-wrap">
+      <div class="phone">
+        <!-- <img src="screenshots/map.png" alt="Map view" /> -->
+        <div class="phone-placeholder">Add map.png here</div>
+      </div>
+      <span class="phone-caption">Map</span>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<section class="features">
+  <div class="features-intro">
+    <h2>Built around how you actually feel.</h2>
+    <p>A mood check-in at the start of your day shapes what you see — so the suggestions match your energy, not a generic list.</p>
+  </div>
+  <div class="feature-grid">
+
+    <div class="feature-card stripe-terracotta">
+      <h3>Resources near you</h3>
+      <p>Browse free yoga, meditation, peer support, counseling, and more — filtered by distance, cost, and how you like to access things.</p>
+    </div>
+
+    <div class="feature-card stripe-sage">
+      <h3>Coping skills</h3>
+      <p>A small library of self-guided techniques — breathing, grounding, gentle movement — you can pick a few to try throughout the day.</p>
+    </div>
+
+    <div class="feature-card stripe-terracotta">
+      <h3>Map view</h3>
+      <p>See everything plotted on a map so you know exactly what's walkable from where you are right now.</p>
+    </div>
+
+    <div class="feature-card stripe-sage">
+      <h3>Saved places</h3>
+      <p>Bookmark programs and spaces you want to come back to, without having to remember where you found them.</p>
+    </div>
+
+    <div class="feature-card stripe-cocoa">
+      <h3>Your preferences</h3>
+      <p>Tell Roam your area, your budget, and how you like to show up — solo, around others, drop-in or scheduled — and it adjusts what it shows you.</p>
+    </div>
+
+    <div class="feature-card stripe-terracotta">
+      <h3>Crisis support</h3>
+      <p>988, the Crisis Text Line, and the SF Warmline are always one tap away — free, confidential, available now.</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="chips-section">
+  <div class="chips-inner">
+    <h2>Across every kind of need.</h2>
+    <p class="sub">Free, low-cost, and sliding-scale options in dozens of categories.</p>
+    <div class="chip-list">
+      <span class="chip">Meditation</span>
+      <span class="chip">Peer Support</span>
+      <span class="chip">Counseling</span>
+      <span class="chip">Fitness &amp; Movement</span>
+      <span class="chip">Sound Healing</span>
+      <span class="chip">Creative &amp; Art</span>
+      <span class="chip">Social &amp; Community</span>
+      <span class="chip">Nature / Wellness</span>
+      <span class="chip">Quiet Spaces</span>
+      <span class="chip">Learning</span>
+      <span class="chip">Library Programs</span>
+      <span class="chip">Health Center</span>
+      <span class="chip">Youth Health</span>
+      <span class="chip">Senior Wellness</span>
+      <span class="chip">Community Events</span>
+      <span class="chip">Public Health</span>
+    </div>
+  </div>
+</section>
+
+<section class="area-section">
+  <h2>Starting in the Bay Area.</h2>
+  <p>San Francisco and the East Bay, with more cities to come.</p>
+  <div class="area-cards">
+    <div class="area-card">
+      <div class="area-name">San Francisco</div>
+      <div class="area-desc">From the Mission to the Outer Sunset — parks, clinics, classes, drop-ins, and community spaces.</div>
+    </div>
+    <div class="area-card">
+      <div class="area-name">East Bay</div>
+      <div class="area-desc">Oakland, Berkeley, and surrounding neighborhoods — accessible and mostly free.</div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <h2>Find what fits your energy today.</h2>
+  <p>Roam is coming soon to iOS.</p>
+</section>
+
+<footer>
+  <p>&copy; 2025 Roam &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy Policy</a></p>
+</footer>
+
+</body>
+</html>
